@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BeerService {
@@ -13,17 +14,18 @@ public class BeerService {
     private BeerRepository beerRepository;
 
     public Beer getById(int id) throws BeerNotFoundException {
-        if (id == 404) {
+        Optional<Beer> beer = beerRepository.findById(id);
+        if (!beer.isPresent()) {
             throw new BeerNotFoundException();
         }
-        return beerRepository.findById(id).get();
+
+        return beer.get();
     }
 
     public List<Beer> getAllBeers() {
-        List<Beer> array = new ArrayList<>();
+        List<Beer> beers = new ArrayList<>();
+        beerRepository.findAll().forEach(beer -> beers.add(beer));
 
-        beerRepository.findAll().forEach(beer -> array.add(beer));
-
-        return array;
+        return beers;
     }
 }

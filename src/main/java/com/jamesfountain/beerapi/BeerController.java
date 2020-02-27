@@ -1,5 +1,7 @@
 package com.jamesfountain.beerapi;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,14 +21,14 @@ public class BeerController {
 
     //    Use case 1: As the website I want to list all beers
     @GetMapping(value = "/", produces = "application/json")
-    public List<Beer> getAll() {
-        return service.getAllBeers();
+    public ResponseEntity<List> getAll() {
+        return new ResponseEntity<>(service.getAllBeers(), HttpStatus.OK);
     }
 
     //    Use case 2: As the website I want to get a single beer
     @GetMapping(value = "/{id}", produces = "application/json")
-    public Beer getById(@PathVariable int id) throws BeerNotFoundException {
-        return service.getById(id);
+    public ResponseEntity<Beer> getById(@PathVariable int id) throws BeerNotFoundException {
+        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
     }
 
 //    Use case 3: As the website I want to list beers with pagination
