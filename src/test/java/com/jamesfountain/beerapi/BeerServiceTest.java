@@ -1,30 +1,72 @@
 package com.jamesfountain.beerapi;
 
-import org.junit.Test;
+import org.junit.Rule;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(MockitoExtension.class)
 public class BeerServiceTest {
 
-    BeerService beerService = new BeerService();
 
-    @Test(expected = BeerNotFoundException.class)
-    public void whenBeerNotFound_exceptionThrown() throws BeerNotFoundException {
-        beerService.getById(404);
-    }
+    static Beer beer = new Beer();
+    static Beer beer2 = new Beer();
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+    @Mock
+    BeerRepository mockRepository;
+    @InjectMocks
+    BeerService beerService;
 
-    @Test
-    public void whenGetById_beerReturned() throws BeerNotFoundException {
-        Beer beer = new Beer();
-
+    @BeforeAll
+    static void setup() {
         beer.setId(1);
         beer.setName("Potato");
         beer.setTagline("Potato");
         beer.setFirst_brewed("Potato");
         beer.setDescription("Potato");
         beer.setImage_url("Potato");
-        beer.setAbv(1.1F);
+        beer.setAbv(1.1);
 
-        assertEquals(beer, beerService.getById(1));
+        beer2.setId(2);
+        beer2.setName("Carrot");
+        beer2.setTagline("Carrot");
+        beer2.setFirst_brewed("Carrot");
+        beer2.setDescription("Carrot");
+        beer2.setImage_url("Carrot");
+        beer2.setAbv(2.2);
+    }
+
+    @Test()
+    public void whenBeerNotFound_exceptionThrown() {
+        Assertions.assertThrows(BeerNotFoundException.class, () -> {
+            beerService.getById(404);
+        });
+    }
+
+    @Test
+    public void whenGetById_beerReturned() throws BeerNotFoundException {
+        Mockito.when(mockRepository.findById(1)).thenReturn(Optional.of(beer));
+
+        assertEquals("Potato", beerService.getById(1).getName());
+    }
+
+    @Test
+    public void whenGetAll_listReturned() {
+        Mockito.when(mockRepository.findAll()).thenReturn(Arrays.asList(beer, beer2));
+
+        assertEquals("Carrot", beerService.getAllBeers().get(1).getName());
     }
 }
