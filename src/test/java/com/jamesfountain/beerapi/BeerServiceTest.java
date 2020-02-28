@@ -1,5 +1,9 @@
 package com.jamesfountain.beerapi;
 
+import com.jamesfountain.beerapi.entity.Beer;
+import com.jamesfountain.beerapi.exception.BeerNotFoundException;
+import com.jamesfountain.beerapi.repository.BeerRepository;
+import com.jamesfountain.beerapi.service.BeerService;
 import org.junit.Rule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

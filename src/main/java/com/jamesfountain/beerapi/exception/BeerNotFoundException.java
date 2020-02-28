@@ -1,4 +1,4 @@
-package com.jamesfountain.beerapi;
+package com.jamesfountain.beerapi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

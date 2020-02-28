@@ -1,4 +1,4 @@
-package com.jamesfountain.beerapi;
+package com.jamesfountain.beerapi.entity;
 
 import lombok.Data;
 
