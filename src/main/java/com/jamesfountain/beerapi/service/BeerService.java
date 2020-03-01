@@ -3,6 +3,7 @@ package com.jamesfountain.beerapi.service;
 import com.jamesfountain.beerapi.entity.Beer;
 import com.jamesfountain.beerapi.exception.BeerNotFoundException;
 import com.jamesfountain.beerapi.repository.BeerRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class BeerService {
 
@@ -30,7 +32,6 @@ public class BeerService {
         if (!beer.isPresent()) {
             throw new BeerNotFoundException();
         }
-
         return beer.get();
     }
 
@@ -42,38 +43,51 @@ public class BeerService {
      * would result in multiple calls to the backend but would expose the id in the url
      *
      * @return the random Beer object
-     * @throws BeerNotFoundException when id is not found
+     * @throws BeerNotFoundException when id is not found - this should never happen
      */
     public Beer getById() throws BeerNotFoundException {
-        // generate a random int between 1 and 25
-        int id = (int) (Math.random() * 25) + 1;
-        // this is a bit of a hack because I know the id range
-        // If I were working with a larger amount of data
-        Optional<Beer> beer = beerRepository.findById(id);
+        // generate a random int between 1 and the count of beers
+        int randomId = (int) (Math.random() * beerRepository.count()) + 1;
+        Optional<Beer> beer = beerRepository.findById(randomId);
         if (!beer.isPresent()) {
+            log.error("Random beer not found, likely a data issue. Random id - " + randomId);
             throw new BeerNotFoundException();
         }
-
         return beer.get();
     }
 
     /**
      * Returns all beers
      *
-     * @return
+     * @return  all beers
      */
     public List<Beer> getAllBeers() {
         List<Beer> beers = new ArrayList<>();
         beerRepository.findAll().forEach(beer -> beers.add(beer));
-
         return beers;
     }
 
+    /**
+     * Returns a paginated list of Beers
+     *
+     * @param start     zero based page index
+     * @param pageSize  size of the page to be returned
+     * @return          paginated list of Beers
+     */
     public List<Beer> getPage(int start, int pageSize) {
-        List<Beer> beers = new ArrayList<>();
         Pageable page = PageRequest.of(start, pageSize);
-        beerRepository.findAll(page).get().forEach(beer -> beers.add(beer));
+        return beerRepository.findBy(page);
+    }
 
-        return beers;
+    /**
+     * Return Beers containing the specified string in name or description columns
+     *
+     * With more time I would have added pagination or a limit to this function
+     *
+     * @param searchString the string to filter on
+     * @return list of beers containing the string in name or description
+     */
+    public List<Beer> filterByNameDescription(String searchString) {
+        return beerRepository.filterByNameDescription(searchString);
     }
 }
