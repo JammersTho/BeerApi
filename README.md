@@ -19,7 +19,7 @@ Return a beer with the specified ID
 #####Example  
 `9091/beer/23`  
 
-###Get By ID  
+###Get Page  
 Return a paginated list of beers  
 Required request parameters -  
 start  
