@@ -4,7 +4,6 @@ import com.jamesfountain.beerapi.entity.Beer;
 import com.jamesfountain.beerapi.exception.BeerNotFoundException;
 import com.jamesfountain.beerapi.repository.BeerRepository;
 import com.jamesfountain.beerapi.service.BeerService;
-import org.junit.Rule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,8 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -24,11 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 public class BeerServiceTest {
 
-
     static Beer beer = new Beer();
     static Beer beer2 = new Beer();
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+
+
     @Mock
     BeerRepository mockRepository;
     @InjectMocks
@@ -71,6 +67,6 @@ public class BeerServiceTest {
     public void whenGetAll_listReturned() {
         Mockito.when(mockRepository.findAll()).thenReturn(Arrays.asList(beer, beer2));
 
-        assertEquals("Carrot", beerService.getAllBeers().get(1).getName());
+        assertEquals(2, beerService.getAllBeers().size());
     }
 }

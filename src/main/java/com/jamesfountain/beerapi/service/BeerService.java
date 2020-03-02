@@ -74,7 +74,7 @@ public class BeerService {
      * @param pageSize  size of the page to be returned
      * @return          paginated list of Beers
      */
-    public List<Beer> getPage(int start, int pageSize) {
+    public List<Beer> getPage(int pageSize, int start) {
         Pageable page = PageRequest.of(start, pageSize);
         return beerRepository.findBy(page);
     }

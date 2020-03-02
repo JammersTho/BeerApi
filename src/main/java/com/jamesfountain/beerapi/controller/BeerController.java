@@ -55,7 +55,7 @@ public class BeerController {
     @GetMapping(value = "/filter", produces = "application/json")
     public ResponseEntity<List> filter(@RequestParam(value = "search") String searchString) {
         log.info("Filter called with string = " + searchString);
-        return new ResponseEntity<>( service.filterByNameDescription(searchString), HttpStatus.OK);
+        return new ResponseEntity<>(service.filterByNameDescription(searchString), HttpStatus.OK);
     }
 
 }
